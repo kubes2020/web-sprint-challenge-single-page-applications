@@ -6,11 +6,17 @@ export default function Pizza() {
   //state for order form
   const [formData, setFormData] = useState({
     name: "",
+    size: "",
+    olives: "",
+    sausage: "",
   });
 
   //state for errors
   const [errors, setErrors] = useState({
     name: "",
+    size: "",
+    olives: "",
+    sausage: "",
   });
 
   //state for submit button
@@ -35,6 +41,9 @@ export default function Pizza() {
       .string()
       .min(2, "must have at least 2 characters")
       .required("name is required"),
+    size: yup.string(),
+    olives: yup.boolean().oneOf([false]),
+    sausage: yup.boolean().oneOf([false]),
   });
 
   const validateChange = (name, value) => {
@@ -65,6 +74,9 @@ export default function Pizza() {
         // reset form if successful
         setFormData({
           name: "",
+          size: "",
+          olives: "",
+          sausage: "",
         });
       })
       .catch((err) => console.log(err.response));
@@ -84,6 +96,35 @@ export default function Pizza() {
             onChange={onChange}
           ></input>
           {errors.name.length > 0 ? <p>{errors.name}</p> : null}
+        </label>
+        <label htmlFor="size">
+          Pizza Size
+          <select name="size" id="size" onChange={onChange}>
+            <option value="12 inch">12 inch</option>
+            <option value="24 inche">24 inch</option>
+          </select>
+          {errors.size.length > 0 ? <p>{errors.size}</p> : null}
+        </label>
+        <h2>Toppings</h2>
+        <label htmlFor="olives">
+          Olives
+          <input
+            name="olives"
+            id="olives"
+            type="checkbox"
+            value={formData.olives}
+            onChange={onChange}
+          ></input>
+        </label>
+        <label htmlFor="sausage">
+          Sausage
+          <input
+            name="sausage"
+            id="sausage"
+            type="checkbox"
+            value={formData.sausage}
+            onChange={onChange}
+          ></input>
         </label>
         <button disabled={disabled}>Add To Order</button>
       </form>
