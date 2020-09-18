@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import * as yup from "yup";
+import axios from "axios";
 
 export default function Pizza() {
   //state for order form
@@ -8,10 +9,14 @@ export default function Pizza() {
   });
 
   //state for errors
-  const [errors, setErrors] = useState([]);
+  const [errors, setErrors] = useState({
+    name: "",
+  });
 
   //state for submit button
   const [disabled, setDisabled] = useState(true);
+
+  const [post, setPost] = useState([]);
 
   const onChange = (e) => {
     e.persist();
@@ -32,7 +37,7 @@ export default function Pizza() {
       .required("name is required"),
   });
 
-  const validateChange = ({ name, value }) => {
+  const validateChange = (name, value) => {
     yup
       .reach(formSchema, name)
       .validate(value)
@@ -44,10 +49,31 @@ export default function Pizza() {
       });
   };
 
+  useEffect(() => {
+    formSchema.isValid(formData).then((valid) => {
+      setDisabled(!valid);
+    });
+  }, [formData]);
+
+  const submitForm = (e) => {
+    e.preventDefault();
+    axios
+      .post("https://reqres.in/api/users", formData)
+      .then((res) => {
+        setPost(res.data); // get just the form data from the REST api
+        console.log("success", post);
+        // reset form if successful
+        setFormData({
+          name: "",
+        });
+      })
+      .catch((err) => console.log(err.response));
+  };
+
   return (
     <>
       <h2>Pizza Order Form</h2>
-      <form>
+      <form onSubmit={submitForm}>
         <label htmlFor="name">
           Name:
           <input
@@ -57,9 +83,11 @@ export default function Pizza() {
             value={formData.name}
             onChange={onChange}
           ></input>
+          {errors.name.length > 0 ? <p>{errors.name}</p> : null}
         </label>
-        <button>Add To Order</button>
+        <button disabled={disabled}>Add To Order</button>
       </form>
+      <pre>{JSON.stringify(post, null, 2)}</pre>
     </>
   );
 }
