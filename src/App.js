@@ -11,7 +11,6 @@ const App = () => {
       <Link to="/">Home</Link>
       <Link to="/order">Order</Link>
 
-      <p>You can remove this code and create your own header</p>
       <Switch>
         <Route path="/order/pizza">
           <Pizza />
