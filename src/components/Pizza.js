@@ -1,6 +1,22 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 export default function Pizza() {
+  const [formData, setFormData] = useState({
+    name: "",
+  });
+
+  const onChange = (e) => {
+    e.persist();
+    //destructure event key/values
+    const { name, value, type, checked } = e.target;
+    const newFormData = {
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    };
+    // validateChange(e)
+    setFormData(newFormData);
+  };
+
   return (
     <>
       <h2>Pizza Order Form</h2>
@@ -11,11 +27,11 @@ export default function Pizza() {
             name="name"
             type="text"
             id="name"
-            // value={formData.name}
-            // onChange={onChange}
+            value={formData.name}
+            onChange={onChange}
           ></input>
         </label>
-        {/* <button disabled={buttonDisabled}>Add To Order</button> */}
+        <button>Add To Order</button>
       </form>
     </>
   );
