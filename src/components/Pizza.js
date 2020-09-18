@@ -9,6 +9,8 @@ export default function Pizza() {
     size: "",
     olives: "",
     sausage: "",
+    peppers: "",
+    chicken: "",
   });
 
   //state for errors
@@ -17,6 +19,8 @@ export default function Pizza() {
     size: "",
     olives: "",
     sausage: "",
+    peppers: "",
+    chicken: "",
   });
 
   //state for submit button
@@ -42,8 +46,10 @@ export default function Pizza() {
       .min(2, "must have at least 2 characters")
       .required("name is required"),
     size: yup.string(),
-    olives: yup.boolean().oneOf([false]),
-    sausage: yup.boolean().oneOf([false]),
+    olives: yup.boolean(),
+    sausage: yup.boolean(),
+    peppers: yup.boolean(),
+    chicken: yup.boolean(),
   });
 
   const validateChange = (name, value) => {
@@ -77,6 +83,8 @@ export default function Pizza() {
           size: "",
           olives: "",
           sausage: "",
+          peppers: "",
+          chicken: "",
         });
       })
       .catch((err) => console.log(err.response));
@@ -123,6 +131,26 @@ export default function Pizza() {
             id="sausage"
             type="checkbox"
             value={formData.sausage}
+            onChange={onChange}
+          ></input>
+        </label>
+        <label htmlFor="peppers">
+          Green Peppers
+          <input
+            name="peppers"
+            id="peppers"
+            type="checkbox"
+            value={formData.peppers}
+            onChange={onChange}
+          ></input>
+        </label>
+        <label htmlFor="chicken">
+          Chicken
+          <input
+            name="chicken"
+            id="chicken"
+            type="checkbox"
+            value={formData.chicken}
             onChange={onChange}
           ></input>
         </label>
