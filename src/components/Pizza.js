@@ -11,6 +11,7 @@ export default function Pizza() {
     sausage: "",
     peppers: "",
     chicken: "",
+    specialInstructions: "",
   });
 
   //state for errors
@@ -21,6 +22,7 @@ export default function Pizza() {
     sausage: "",
     peppers: "",
     chicken: "",
+    specialInstructions: "",
   });
 
   //state for submit button
@@ -30,6 +32,7 @@ export default function Pizza() {
 
   const onChange = (e) => {
     e.persist();
+    console.log(e.target.value);
     //destructure event key/values
     const { name, value, type, checked } = e.target;
     const newFormData = {
@@ -45,11 +48,14 @@ export default function Pizza() {
       .string()
       .min(2, "must have at least 2 characters")
       .required("name is required"),
-    size: yup.string(),
-    olives: yup.boolean(),
-    sausage: yup.boolean(),
-    peppers: yup.boolean(),
-    chicken: yup.boolean(),
+    size: yup.string().oneOf(["12 inch", "24 inch"], "Size is required"),
+
+    olives: yup.string().notRequired("choose something"),
+    sausage: yup.string().notRequired("choose something"),
+    peppers: yup.string().notRequired("choose something"),
+    chicken: yup.string().notRequired("choose something"),
+
+    specialInstructions: yup.string().notRequired(),
   });
 
   const validateChange = (name, value) => {
@@ -85,6 +91,7 @@ export default function Pizza() {
           sausage: "",
           peppers: "",
           chicken: "",
+          specialInstructions: "",
         });
       })
       .catch((err) => console.log(err.response));
@@ -108,8 +115,9 @@ export default function Pizza() {
         <label htmlFor="size">
           Pizza Size
           <select name="size" id="size" onChange={onChange}>
+            <option value="">Choose One</option>
             <option value="12 inch">12 inch</option>
-            <option value="24 inche">24 inch</option>
+            <option value="24 inch">24 inch</option>
           </select>
           {errors.size.length > 0 ? <p>{errors.size}</p> : null}
         </label>
@@ -153,6 +161,16 @@ export default function Pizza() {
             value={formData.chicken}
             onChange={onChange}
           ></input>
+        </label>
+        <label htmlFor="specialInstructions">
+          Special Instructions
+          <textarea
+            name="specialInstructions"
+            id="specialInstructions"
+            type="textarea"
+            value={formData.specialInstructions}
+            onChange={onChange}
+          ></textarea>
         </label>
         <button disabled={disabled}>Add To Order</button>
       </form>
