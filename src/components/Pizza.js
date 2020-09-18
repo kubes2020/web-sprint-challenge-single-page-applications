@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from "react";
+import * as yup from "yup";
 
 export default function Pizza() {
+  //state for order form
   const [formData, setFormData] = useState({
     name: "",
   });
+
+  //state for errors
+  const [errors, setErrors] = useState([]);
+
+  //state for submit button
+  const [disabled, setDisabled] = useState(true);
 
   const onChange = (e) => {
     e.persist();
@@ -13,8 +21,27 @@ export default function Pizza() {
       ...formData,
       [name]: type === "checkbox" ? checked : value,
     };
-    // validateChange(e)
+    validateChange(name, value);
     setFormData(newFormData);
+  };
+
+  const formSchema = yup.object().shape({
+    name: yup
+      .string()
+      .min(2, "must have at least 2 characters")
+      .required("name is required"),
+  });
+
+  const validateChange = ({ name, value }) => {
+    yup
+      .reach(formSchema, name)
+      .validate(value)
+      .then((valid) => {
+        setErrors({ ...errors, [name]: "" });
+      })
+      .catch((err) => {
+        setErrors({ ...errors, [name]: err.errors[0] });
+      });
   };
 
   return (
